@@ -61,8 +61,6 @@ class User extends Core
 	{
 		if (empty($data)) return false;
 		
-		var_dump(config('smtp'));
-		
 		try
 		{
 			// begin transaction
@@ -108,7 +106,6 @@ class User extends Core
 			// mail sending part
 			$subject="Activate your account";
 			$message="Please activate your account via this link: http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]&passkey=$hash&email=$data[email]";
-			
 			if (!$this->send_mail($data['email'],$subject,$message))
 				throw new Exception("Could not send the verification email!");
 			
