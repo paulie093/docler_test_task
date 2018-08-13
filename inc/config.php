@@ -13,6 +13,9 @@ function config($idx='')
 	// password generating
 	$config['salt']='$1$docler$';
 	
+	// SMTP mail
+	$config['smtp']=['host'=>'localhost','port'=>25,'auth'=>false];
+	
 	if (!empty($idx)) return $config[$idx];
 }
 ?>

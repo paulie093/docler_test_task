@@ -61,6 +61,8 @@ class User extends Core
 	{
 		if (empty($data)) return false;
 		
+		var_dump(config('smtp'));
+		
 		try
 		{
 			// begin transaction
@@ -106,7 +108,8 @@ class User extends Core
 			// mail sending part
 			$subject="Activate your account";
 			$message="Please activate your account via this link: http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]&passkey=$hash&email=$data[email]";
-			if (!mail($data['email'],$subject,$message))
+			
+			if (!$this->send_mail($data['email'],$subject,$message))
 				throw new Exception("Could not send the verification email!");
 			
 			// commit
@@ -119,6 +122,26 @@ class User extends Core
 			$this->db->rollback();
 			return $e->getMessage();
 		}
+	}
+	
+	private function send_mail($to='',$subject='',$message='')
+	{
+		if (empty($to) || empty($subject) || empty($message)) return false;
+		
+		// add Mail PEAR library
+		include('Mail.php');
+		
+		$recipients=$to;
+		
+		$headers = [];
+		$headers['From']    = 'laurinyecz.pal.1993@gmail.com';
+		$headers['To']      = $to;
+		$headers['Subject'] = $subject;
+		
+		$body = $message;
+		
+		$mail =& Mail::factory('smtp',config('smtp'));
+		return $mail->send($recipients,$headers,$body);
 	}
 	
 	public function confirm_user($passkey='',$email='')
