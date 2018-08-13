@@ -47,9 +47,17 @@ class DB
 		return $rows;
 	}
 	
-	public function update()
+	public function insert($table='',$data=[])
 	{
+		if (empty($table) || empty($data)) return false;
 		
+		$table_fields=array_keys($data);
+		$placeholder=array_fill(0,sizeof($table_fields),'?');
+		
+		$stmt = $this->conn->prepare("INSERT INTO $table (".implode(', ',$table_fields).") VALUES (".implode(', ',$placeholder).")");
+		$result = $stmt->execute(array_values($data));
+		
+		return $this->conn->lastInsertId();
 	}
 }
 ?>

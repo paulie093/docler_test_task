@@ -5,17 +5,16 @@ if ($_SESSION['docler']['logged_in'])
 	exit;
 }
 
-if (isset($_POST['login']))
+if (isset($_POST['register']))
 {
-	$user = new User();
-	$exists=$user->login_check($_POST);
+	$register=$user->register($_POST);
 }
 ?>
 
-<h2>Login</h2>
+<h2>Register</h2>
 
-<?php if(is_string($exists)): ?>
-<p style="color: red;"><?php print $exists ?></p>
+<?php if(is_string($register)): ?>
+<p style="color: red;"><?php print $register ?></p>
 <?php endif; ?>
 
 <form method="post" action="">
@@ -29,13 +28,21 @@ if (isset($_POST['login']))
 			<td><input type="password" name="password" id="password" required></td>
 		</tr>
 		<tr>
+			<td><label for="password_agn">Password again:</label></td>
+			<td><input type="password" name="password_agn" id="password_agn" required></td>
+		</tr>
+		<tr>
+			<td><label for="name">Name:</label></td>
+			<td><input type="text" name="name" id="name" required></td>
+		</tr>
+		<tr>
 			<td colspan="2">
-				<button name="login">Login</button>
+				<button name="register">Submit</button>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="padding-top: 10px;">
-				<a href="?q=reg">Register</a>
+				<a href="?q=login">Back to login page</a>
 			</td>
 		</tr>
 	</table>
