@@ -54,10 +54,46 @@ class DB
 		$table_fields=array_keys($data);
 		$placeholder=array_fill(0,sizeof($table_fields),'?');
 		
-		$stmt = $this->conn->prepare("INSERT INTO $table (".implode(', ',$table_fields).") VALUES (".implode(', ',$placeholder).")");
-		$result = $stmt->execute(array_values($data));
+		$stmt=$this->conn->prepare("INSERT INTO $table (".implode(', ',$table_fields).") VALUES (".implode(', ',$placeholder).")");
+		$stmt->execute(array_values($data));
 		
-		return $this->conn->lastInsertId();
+		if ($this->conn->errorCode()!="00000")
+			return $this->conn->errorInfo();
+		
+		$new_id=intval($this->query("SELECT MAX(id) FROM $table")->fetch()[0]);
+		return $new_id;
+	}
+	
+	public function update($table='',$data=[],$where='1')
+	{
+		if (empty($table) || empty($data)) return false;
+		
+		foreach ($data as $key => $val)
+			$set[]="`$key`='$val'";
+		
+		$this->query("UPDATE `$table` SET ".implode(',', $set)." WHERE $where");
+		return true;
+	}
+	
+	public function delete($table='',$where='1')
+	{
+		$this->query("DELETE FROM `$table` WHERE $where");
+		return true;
+	}
+	
+	public function begin()
+	{
+		$this->query("BEGIN");
+	}
+	
+	public function commit()
+	{
+		$this->query("COMMIT");
+	}
+	
+	public function rollback()
+	{
+		$this->query("ROLLBACK");
 	}
 }
 ?>

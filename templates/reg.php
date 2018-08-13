@@ -5,13 +5,32 @@ if ($_SESSION['docler']['logged_in'])
 	exit;
 }
 
+$user=new User();
+
+if (isset($_GET['passkey']) && isset($_GET['email']))
+{
+	$user->confirm_user($_GET['passkey'],$_GET['email']);
+	exit;
+}
+
 if (isset($_POST['register']))
 {
 	$register=$user->register($_POST);
+	if (intval($register)>0)
+	{
+		header('location: ?q=reg&success=1');
+		exit;
+	}
 }
 ?>
 
 <h2>Register</h2>
+
+<?php if (isset($_GET['success']) && isset($_SERVER['HTTP_REFERER'])): ?>
+
+<p>Registered successfully! An email is sent to your email address. Please check your inbox.</p>
+
+<?php else: ?>
 
 <?php if(is_string($register)): ?>
 <p style="color: red;"><?php print $register ?></p>
@@ -48,3 +67,5 @@ if (isset($_POST['register']))
 	</table>
 </div>
 </form>
+
+<?php endif; ?>
