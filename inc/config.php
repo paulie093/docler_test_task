@@ -15,6 +15,7 @@ function config($idx='')
 	
 	// SMTP mail
 	$config['smtp']=['host'=>'localhost','port'=>25,'auth'=>false];
+	$config['mail_from']='doclertest@lpteszt.nhely.hu';
 	
 	if (!empty($idx)) return $config[$idx];
 }

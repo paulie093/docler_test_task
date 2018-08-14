@@ -125,20 +125,25 @@ class User extends Core
 	{
 		if (empty($to) || empty($subject) || empty($message)) return false;
 		
-		// add Mail PEAR library
-		include('Mail.php');
-		
-		$recipients=$to;
-		
-		$headers = [];
-		$headers['From']    = 'laurinyecz.pal.1993@gmail.com';
-		$headers['To']      = $to;
-		$headers['Subject'] = $subject;
-		
-		$body = $message;
-		
-		$mail =& Mail::factory('smtp',config('smtp'));
-		return $mail->send($recipients,$headers,$body);
+		// if PEAR Mail is installed then use PEAR Mail function, otherwise PHP mail() function should be used
+		if (class_exists('Mail'))
+		{
+			// add Mail PEAR library
+			include('Mail.php');
+			
+			$recipients=$to;
+			
+			$headers = [];
+			$headers['From']    = config('mail_from');
+			$headers['To']      = $to;
+			$headers['Subject'] = $subject;
+			
+			$body = $message;
+			
+			$mail =& Mail::factory('smtp',config('smtp'));
+			return $mail->send($recipients,$headers,$body);
+		}
+		else return mail($to,$subject,$message,'From: '.config('mail_from'));
 	}
 	
 	public function confirm_user($passkey='',$email='')
