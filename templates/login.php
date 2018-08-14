@@ -18,6 +18,12 @@ if (isset($_POST['login']))
 <p style="color: red;"><?php print $exists ?></p>
 <?php endif; ?>
 
+<?php if($_GET['confirm']=='success'): ?>
+<p style="color: green;">Account is activated successfully</p>
+<?php elseif($_GET['confirm']=='failed'): ?>
+<p style="color: red;">Account is already activated or does not exist in the database anymore</p>
+<?php endif; ?>
+
 <form method="post" action="">
 	<table>
 		<tr>

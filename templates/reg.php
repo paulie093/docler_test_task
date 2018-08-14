@@ -10,7 +10,6 @@ $user=new User();
 if (isset($_GET['passkey']) && isset($_GET['email']))
 {
 	$user->confirm_user($_GET['passkey'],$_GET['email']);
-	exit;
 }
 
 if (isset($_POST['register']))

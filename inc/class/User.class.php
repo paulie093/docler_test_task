@@ -154,7 +154,7 @@ class User extends Core
 		$confirm=$this->db->select('confirm INNER JOIN users ON confirm.user_id=users.id','confirm.*',"email LIKE '".trim($email)."' AND hash='$passkey' AND session_id='".session_id()."' AND active=0")[0];
 		if (!is_array($confirm))
 		{
-			header('location: ?q=login');
+			header('location: ?q=login&confirm=failed');
 			exit;
 		}
 		
@@ -163,7 +163,7 @@ class User extends Core
 		// delete confirm field
 		$delete=$this->db->delete('confirm',"id='".$confirm['id']."'");
 		
-		header('location: ?q=login');
+		header('location: ?q=login&confirm=success');
 		exit;
 	}
 }
